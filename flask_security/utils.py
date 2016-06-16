@@ -13,6 +13,8 @@ import base64
 import hashlib
 import hmac
 import sys
+from binascii import unhexlify
+
 
 try:
     from urlparse import urlsplit
@@ -107,7 +109,9 @@ def get_hmac(password):
             'not be None when the value of `SECURITY_PASSWORD_HASH` is '
             'set to "%s"' % _security.password_hash)
 
-    h = hmac.new(encode_string(salt), encode_string(password), hashlib.sha512)
+    p_hash = hashlib.md5()                                                                       
+    p_hash.update(encode_string(password))  
+    h = hmac.new(encode_string(salt), password, hashlib.sha512)
     return base64.b64encode(h.digest())
 
 
