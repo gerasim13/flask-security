@@ -111,7 +111,7 @@ def get_hmac(password):
 
     p_hash = hashlib.md5()                                                                       
     p_hash.update(encode_string(password)) 
-    password = p_hash.digets() 
+    password = p_hash.digest()
     h = hmac.new(encode_string(salt), password, hashlib.sha512)
     return base64.b64encode(h.digest())
 
