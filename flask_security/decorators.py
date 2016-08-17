@@ -13,7 +13,7 @@ from collections import namedtuple
 from functools import wraps
 
 from flask import current_app, Response, request, redirect, _request_ctx_stack
-from flask_login import current_user, login_required  # pragma: no flakes
+from flask_login import current_user, login_required, logout_user  # pragma: no flakes
 from flask_principal import RoleNeed, Permission, Identity, identity_changed
 from werkzeug.local import LocalProxy
 
@@ -221,6 +221,9 @@ def anonymous_user_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if current_user.is_authenticated:
-            return redirect(utils.get_url(_security.post_login_view))
+            if request.json:
+                logout_user()
+            else:
+                return redirect(utils.get_url(_security.post_login_view))
         return f(*args, **kwargs)
     return wrapper
